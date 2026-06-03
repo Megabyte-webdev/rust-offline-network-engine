@@ -1,5 +1,5 @@
-use tokio::net::TcpStream;
 use tokio::io::AsyncWriteExt;
+use tokio::net::TcpStream;
 
 pub struct TcpTransport;
 

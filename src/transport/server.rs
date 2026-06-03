@@ -7,7 +7,9 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 
 pub async fn start_server(port: u16, engine: Arc<Mutex<Engine>>) {
-    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port))
+        .await
+        .unwrap();
 
     println!("🌐 Listening on {}", port);
 

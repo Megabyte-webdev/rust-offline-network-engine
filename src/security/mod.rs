@@ -1,6 +1,9 @@
-use aes_gcm::{ Aes256Gcm, Key, Nonce, aead::{ Aead, KeyInit, Error as AeadError } };
-use sha2::{ Sha256, Digest };
+use aes_gcm::{
+    Aes256Gcm, Key, Nonce,
+    aead::{Aead, Error as AeadError, KeyInit},
+};
 use rand::RngCore;
+use sha2::{Digest, Sha256};
 
 pub struct SecurityLayer {
     key: Vec<u8>,

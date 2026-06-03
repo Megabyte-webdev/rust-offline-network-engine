@@ -1,4 +1,3 @@
-
 use sled::Db;
 
 pub struct Storage {
@@ -7,6 +6,8 @@ pub struct Storage {
 
 impl Storage {
     pub fn open(path: &str) -> Self {
-        Self { db: sled::open(path).expect("storage") }
+        Self {
+            db: sled::open(path).expect("storage"),
+        }
     }
 }

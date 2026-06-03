@@ -1,14 +1,17 @@
 mod core;
-mod transport;
 mod discovery;
 mod security;
+mod transport;
 
 use core::engine::Engine;
 use core::message::Message;
 use transport::server::start_server;
 
-use std::{ env, sync::Arc };
-use tokio::{ sync::Mutex, time::{ Duration, sleep } };
+use std::{env, sync::Arc};
+use tokio::{
+    sync::Mutex,
+    time::{Duration, sleep},
+};
 
 #[tokio::main]
 async fn main() {
@@ -75,7 +78,11 @@ async fn main() {
     // TEST MESSAGE (TEMPORARY HARDCODE)
 
     {
-        let msg = Message::new(node_id.clone(), None, format!("Hello mesh from {}", node_id));
+        let msg = Message::new(
+            node_id.clone(),
+            None,
+            format!("Hello mesh from {}", node_id),
+        );
 
         let mut eng = engine.lock().await;
 

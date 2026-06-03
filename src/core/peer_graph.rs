@@ -13,9 +13,15 @@ impl PeerGraph {
     }
 
     pub fn add_peer(&mut self, a: &str, b: &str) {
-        self.connections.entry(a.to_string()).or_default().push(b.to_string());
+        self.connections
+            .entry(a.to_string())
+            .or_default()
+            .push(b.to_string());
 
-        self.connections.entry(b.to_string()).or_default().push(a.to_string());
+        self.connections
+            .entry(b.to_string())
+            .or_default()
+            .push(a.to_string());
     }
 
     pub fn neighbors(&self, id: &str) -> Vec<String> {

@@ -1,5 +1,5 @@
-use tokio::net::UdpSocket;
 use std::time::Duration;
+use tokio::net::UdpSocket;
 
 pub struct DiscoveryPacket {
     pub id: String,
@@ -22,7 +22,10 @@ impl LanDiscovery {
         }
     }
 
-    pub async fn listen<F>(mut on_peer: F) where F: FnMut(DiscoveryPacket) + Send + 'static {
+    pub async fn listen<F>(mut on_peer: F)
+    where
+        F: FnMut(DiscoveryPacket) + Send + 'static,
+    {
         let socket = UdpSocket::bind("0.0.0.0:7000").await.unwrap();
         let mut buf = vec![0u8; 1024];
 
