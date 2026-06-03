@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 authors = ["Afolabi Mubarak"]
 description = "Offline-first peer-to-peer network engine"
-repository = https://github.com/Megabyte-webdev/rust-offline-network-engine
+repository = "https://github.com/Megabyte-webdev/rust-offline-network-engine"
 keywords = ["network", "p2p", "mesh", "offline", "encryption", "secure chat", "encrypted"]
 categories = ["network-programming", "cryptography", "information-technology"]
 
