@@ -91,8 +91,14 @@ impl Engine {
 
         for (_node, msg) in forwarded {
             let json = serde_json::to_vec(&msg).unwrap();
-            let encrypted = self.security.encrypt(&json);
-            let _ = self.transport.send(addr, encrypted).await;
+            match self.security.encrypt(&json) {
+                Ok(encrypted) => {
+                    self.transport.send(addr, encrypted).await;
+                }
+                Err(e) => {
+                    eprintln!("encrypt failed: {:?}", e);
+                }
+            }
 
             self.events.emit(EngineEvent::MessageForwarded {
                 to: addr.to_string(),
@@ -164,7 +170,7 @@ impl Engine {
         }
 
         // 4. TTL
-        if msg.ttl <= 0 {
+        if msg.ttl == 0 {
             return;
         }
         let mut forwarded = msg.clone();
@@ -185,10 +191,13 @@ impl Engine {
                         self.pending_acks.lock().await.insert(msg.id.clone(), Instant::now());
 
                         let json = serde_json::to_vec(&forwarded).unwrap();
-                        if let Ok(encrypted) = self.security.encrypt(&json) {
-                            // PASS THE RESULT DIRECTLY
-                            self.transport.send(addr, Ok(encrypted)).await;
-                            routed = true;
+                        match self.security.encrypt(&json) {
+                            Ok(encrypted) => {
+                                self.transport.send(addr, encrypted).await;
+                            }
+                            Err(e) => {
+                                eprintln!("encrypt failed: {:?}", e);
+                            }
                         }
                     }
                 }
@@ -203,7 +212,7 @@ impl Engine {
                 let json = serde_json::to_vec(&msg).unwrap();
                 if let Ok(encrypted) = self.security.encrypt(&json) {
                     // PASS THE RESULT DIRECTLY
-                    self.transport.send(addr, Ok(encrypted)).await;
+                    self.transport.send(addr, encrypted).await;
                     println!("📡 fallback => {}", addr);
                 }
             }
@@ -280,9 +289,14 @@ impl Engine {
         for (_, addr) in peers.iter() {
             let json = serde_json::to_vec(&msg).unwrap();
 
-            let encrypted = self.security.encrypt(&json);
-
-            self.transport.send(addr, encrypted).await;
+            match self.security.encrypt(&json) {
+                Ok(encrypted) => {
+                    self.transport.send(addr, encrypted).await;
+                }
+                Err(e) => {
+                    eprintln!("encrypt failed: {:?}", e);
+                }
+            }
         }
     }
 }

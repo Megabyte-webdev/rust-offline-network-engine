@@ -38,7 +38,7 @@ impl SecurityLayer {
     pub fn decrypt(&self, data: &[u8]) -> Result<Vec<u8>, AeadError> {
         if data.len() < 12 {
             // Basic check to prevent out-of-bounds before slicing
-            return Err(AeadError);
+            return Err(AeadError::from(aes_gcm::Error));
         }
 
         let cipher = Aes256Gcm::new(Key::<Aes256Gcm>::from_slice(&self.key));
