@@ -1,9 +1,6 @@
-use aes_gcm::{
-    Aes256Gcm, Key, Nonce,
-    aead::{Aead, Error as AeadError, KeyInit},
-};
+use aes_gcm::{ Aes256Gcm, Key, Nonce, aead::{ Aead, Error as AeadError, KeyInit } };
 use rand::RngCore;
-use sha2::{Digest, Sha256};
+use sha2::{ Digest, Sha256 };
 
 pub struct SecurityLayer {
     key: Vec<u8>,
@@ -41,7 +38,7 @@ impl SecurityLayer {
     pub fn decrypt(&self, data: &[u8]) -> Result<Vec<u8>, AeadError> {
         if data.len() < 12 {
             // Basic check to prevent out-of-bounds before slicing
-            return Err(AeadError::from(aes_gcm::Error));
+            return Err(aes_gcm::Error);
         }
 
         let cipher = Aes256Gcm::new(Key::<Aes256Gcm>::from_slice(&self.key));

@@ -1,28 +1,24 @@
-use std::{
-    collections::{HashMap, HashSet},
-    sync::Arc,
-    time::Instant,
-};
+use std::{ collections::{ HashMap, HashSet }, sync::Arc, time::Instant };
 
 use tokio::sync::Mutex;
 
-use crate::discovery::lan_discovery::{DiscoveryPacket, LanDiscovery};
+use crate::discovery::lan_discovery::{ DiscoveryPacket, LanDiscovery };
 use crate::security::SecurityLayer;
 
 use crate::core::{
-    event_bus::EventBus, events::EngineEvent, message::Message, peer_graph::PeerGraph,
+    peer_graph::PeerGraph,
     router::Router,
+    message::Message,
+    event_bus::EventBus,
+    events::EngineEvent,
 };
 
 use crate::transport::tcp_transport::TcpTransport;
 
 fn current_timestamp() -> u64 {
-    use std::time::{SystemTime, UNIX_EPOCH};
+    use std::time::{ SystemTime, UNIX_EPOCH };
 
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs()
+    SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs()
 }
 
 #[derive(Clone, Debug)]
@@ -89,8 +85,9 @@ impl Engine {
     pub async fn send(&mut self, msg: Message, addr: &str) {
         let forwarded = self.router.route(msg.clone(), &self.graph);
 
-        self.events
-            .emit(EngineEvent::MessageReceived { msg: msg.clone() });
+        self.events.emit(EngineEvent::MessageReceived {
+            msg: msg.clone(),
+        });
 
         for (_node, msg) in forwarded {
             let json = serde_json::to_vec(&msg).unwrap();
@@ -124,8 +121,7 @@ impl Engine {
 
                     println!("🔍 Discovered peer => {} @ {}", packet.id, packet.addr);
                 });
-            })
-            .await;
+            }).await;
         });
 
         tokio::spawn(async move {
@@ -185,16 +181,14 @@ impl Engine {
         let mut routed = false;
 
         if let Some(routes) = table.get(&msg.from) {
-            if let Some(best) = routes
-                .iter()
-                .min_by(|a, b| a.score().partial_cmp(&b.score()).unwrap())
+            if
+                let Some(best) = routes
+                    .iter()
+                    .min_by(|a, b| a.score().partial_cmp(&b.score()).unwrap())
             {
                 if best.success_rate >= 30 {
                     if let Some(addr) = self.peers.lock().await.get(&best.next_hop) {
-                        self.pending_acks
-                            .lock()
-                            .await
-                            .insert(msg.id.clone(), Instant::now());
+                        self.pending_acks.lock().await.insert(msg.id.clone(), Instant::now());
 
                         let json = serde_json::to_vec(&forwarded).unwrap();
                         match self.security.encrypt(&json) {
