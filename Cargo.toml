@@ -1,0 +1,23 @@
+[package]
+name = "defcomm-network-engine"
+version = "0.1.0"
+edition = "2024"
+authors = ["Afolabi Mubarak"]
+description = "Offline-first peer-to-peer network engine"
+repository = https://github.com/Megabyte-webdev/rust-offline-network-engine
+keywords = ["network", "p2p", "mesh", "offline", "encryption", "secure chat", "encrypted"]
+categories = ["network-programming", "cryptography", "information-technology"]
+
+
+[dependencies]
+serde = {version="1.0.228", features = ["derive"]}
+serde_json = "1.0.150"
+tokio = {version="1.52.3", features=["full"]}
+uuid = {version="1.23.1", features = ["v4"]}
+
+aes-gcm = "0.10"
+rand = "0.8"
+sha2 = "0.10"
+base64 = "0.22"
+sled = "0.34"
+chrono = { version = "0.4", features = ["serde"] }
